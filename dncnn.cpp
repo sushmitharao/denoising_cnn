@@ -147,9 +147,9 @@ auto main() -> int {
 	// Get number of training images
 	const size_t train_dataset_size = train_dataset.size().value();
 
-	// Load training images in batches
+	// Load randomly shuffled training images in batches
 	auto train_loader =
-		torch::data::make_data_loader<torch::data::samplers::SequentialSampler>(
+		torch::data::make_data_loader<torch::data::samplers::RandomSampler>(
 			std::move(train_dataset), torch::data::DataLoaderOptions().batch_size(kTrainBatchSize));
 
 	// Instantiate NoisyBSDS Dataset for training dataset
@@ -161,7 +161,7 @@ auto main() -> int {
 	const size_t test_dataset_size = test_dataset.size().value();
 
 	// Load test dataset in batches 
-	auto test_loader = torch::data::make_data_loader(std::move(test_dataset), kTestBatchSize);
+	auto test_loader = torch::data::make_data_loader<torch::data::samplers::SequentialSampler>(std::move(test_dataset), kTestBatchSize);
 
 	Net model;
 	// If CUDA available, move model to CUDA
